@@ -132,6 +132,79 @@ a {
     color: var(--accent);
 }
 
+/* ================================================
+   SEGMENTED TOGGLE CONTROL
+   ================================================ */
+
+.toggle-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--bg-card);
+}
+
+.toggle-group {
+    display: inline-flex;
+    background: var(--bg-app);
+    border-radius: 9999px;
+    padding: 4px;
+    gap: 2px;
+    border: 1px solid var(--border);
+}
+
+.toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.toggle-btn:hover {
+    color: var(--primary);
+    background: var(--bg-card);
+}
+
+.toggle-btn-active {
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    color: #fff !important;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.toggle-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: rgba(255,255,255,0.25);
+    color: inherit;
+    transition: var(--transition);
+}
+
+.toggle-btn:not(.toggle-btn-active) .toggle-pill {
+    background: var(--border);
+    color: var(--text-muted);
+}
+
+.toggle-empty {
+    text-align: center;
+    padding: 56px 24px;
+}
 
 /* Page header */
 .page-header {

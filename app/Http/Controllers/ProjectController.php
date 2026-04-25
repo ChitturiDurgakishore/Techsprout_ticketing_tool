@@ -22,31 +22,13 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $user = auth()->user();
+        $user    = auth()->user();
+        $section = request()->get('section', 'assigned'); // 'assigned' or 'created'
+        $search   = request('search');
+        $status   = request('status');
+        $priority = request('priority');
 
-        $query = $project->tickets()->with(['assignedTo', 'createdBy', 'department']);
-
-        // Non-admins only see their own tickets within the project
-        if ($user->role !== 'admin') {
-            $query->where(function ($q) use ($user) {
-                $q->where('assigned_to', $user->id)
-                  ->orWhere('created_by', $user->id);
-            });
-        }
-
-        // Filters
-        if (request()->filled('search')) {
-            $query->where('title', 'like', '%' . request('search') . '%');
-        }
-        if (request()->filled('status')) {
-            $query->where('status', request('status'));
-        }
-        if (request()->filled('priority')) {
-            $query->where('priority', request('priority'));
-        }
-
-        $tickets = $query->latest()->paginate(15);
-
+        // Always compute project-wide stats (all tickets in project)
         $stats = [
             'total'       => $project->tickets()->count(),
             'open'        => $project->tickets()->where('status', 'open')->count(),
@@ -54,7 +36,39 @@ class ProjectController extends Controller
             'closed'      => $project->tickets()->where('status', 'closed')->count(),
         ];
 
-        return view('projects.show', compact('project', 'tickets', 'stats'));
+        if ($user->role === 'admin') {
+            // Admin sees all tickets in one list
+            $query = $project->tickets()->with(['assignedTo', 'createdBy', 'department']);
+            if ($search)   $query->where('title', 'like', '%' . $search . '%');
+            if ($status)   $query->where('status', $status);
+            if ($priority) $query->where('priority', $priority);
+            $tickets        = $query->latest()->paginate(15)->withQueryString();
+            $assignedTickets = null;
+            $createdTickets  = null;
+        } else {
+            $tickets = null;
+
+            // Tickets within this project assigned TO this user
+            $assignedQuery = $project->tickets()->with(['createdBy', 'department'])
+                ->where('assigned_to', $user->id);
+            if ($search)   $assignedQuery->where('title', 'like', '%' . $search . '%');
+            if ($status)   $assignedQuery->where('status', $status);
+            if ($priority) $assignedQuery->where('priority', $priority);
+            $assignedTickets = $assignedQuery->latest()->paginate(15, ['*'], 'assigned_page')->withQueryString();
+
+            // Tickets within this project created BY this user
+            $createdQuery = $project->tickets()->with(['assignedTo', 'department'])
+                ->where('created_by', $user->id);
+            if ($search)   $createdQuery->where('title', 'like', '%' . $search . '%');
+            if ($status)   $createdQuery->where('status', $status);
+            if ($priority) $createdQuery->where('priority', $priority);
+            $createdTickets = $createdQuery->latest()->paginate(15, ['*'], 'created_page')->withQueryString();
+        }
+
+        return view('projects.show', compact(
+            'project', 'stats', 'section',
+            'tickets', 'assignedTickets', 'createdTickets'
+        ));
     }
 
     public function create()
