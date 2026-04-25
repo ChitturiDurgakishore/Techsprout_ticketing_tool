@@ -8,7 +8,7 @@ use App\Models\Department;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-
+use App\Models\Comment;
 class TicketController extends Controller
 {
     public function create()
@@ -29,7 +29,7 @@ class TicketController extends Controller
             'title'         => 'required|string|min:5|max:255',
             'type'          => 'required|in:bug,feature,task',
             'description'   => 'required|string|min:10',
-            'page_url'      => 'nullable|url',
+            'page_url'      => 'nullable|string|max:500',
             'priority'      => 'required|in:low,medium,high,critical',
             'project_id'    => 'required|exists:projects,id',
             'department_id' => 'required|exists:departments,id',

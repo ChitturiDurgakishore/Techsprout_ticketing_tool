@@ -16,16 +16,26 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Add form validation feedback
+// Add form validation feedback (loading state on submit)
+// Skip logout forms to avoid breaking auth session on mobile
 document.addEventListener('DOMContentLoaded', function () {
     const forms = document.querySelectorAll('form');
 
     forms.forEach(form => {
+        // Skip logout form
+        const action = form.getAttribute('action') || '';
+        if (action.includes('logout')) return;
+
         form.addEventListener('submit', function (e) {
             const submitBtn = form.querySelector('[type="submit"]');
             if (submitBtn && !submitBtn.hasAttribute('data-no-loading')) {
-                submitBtn.disabled = true;
+                // Re-enable after 10s in case of server error
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = submitBtn.getAttribute('data-original-text') || submitBtn.textContent;
+                }, 10000);
                 submitBtn.setAttribute('data-original-text', submitBtn.textContent);
+                submitBtn.disabled = true;
                 submitBtn.textContent = 'Processing...';
             }
         });
