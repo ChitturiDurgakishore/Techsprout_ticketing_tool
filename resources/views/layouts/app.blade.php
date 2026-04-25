@@ -16,10 +16,15 @@
     <div class="app-container">
         {{-- Top Navbar --}}
         <nav class="navbar">
-            <div class="navbar-brand">
-                <a href="{{ route('dashboard') }}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+            <div class="navbar-left">
+                <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+                <a href="{{ route('dashboard') }}" class="navbar-brand-link">
                     <div class="brand-logo">TF</div>
-                    <span>TicketFlow</span>
+                    <span class="brand-text">TicketFlow</span>
                 </a>
             </div>
 
@@ -35,8 +40,11 @@
         </nav>
 
         <div class="main-wrapper">
+            {{-- Sidebar Overlay (mobile) --}}
+            <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
             {{-- Left Sidebar --}}
-            <aside class="sidebar">
+            <aside class="sidebar" id="sidebar">
                 <nav class="sidebar-nav">
                     <div class="sidebar-section">
                         <div class="sidebar-title">Overview</div>
@@ -78,10 +86,13 @@
                 </nav>
 
                 <div class="sidebar-footer">
-                    <a href="{{ route('logout') }}" class="nav-item nav-item-logout">
-                        <span class="nav-icon">🚪</span>
-                        <span>Logout</span>
-                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="nav-item nav-item-logout sidebar-logout-btn">
+                            <span class="nav-icon">🚪</span>
+                            <span>Logout</span>
+                        </button>
+                    </form>
                 </div>
             </aside>
 

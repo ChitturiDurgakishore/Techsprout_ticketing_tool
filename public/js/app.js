@@ -50,6 +50,65 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// ================================================
+// MOBILE SIDEBAR / HAMBURGER MENU
+// ================================================
+document.addEventListener('DOMContentLoaded', function () {
+    const hamburger = document.getElementById('hamburger-btn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (!hamburger || !sidebar || !overlay) return;
+
+    function openSidebar() {
+        sidebar.classList.add('is-open');
+        overlay.classList.add('is-visible');
+        hamburger.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('is-open');
+        overlay.classList.remove('is-visible');
+        hamburger.classList.remove('is-active');
+        document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', function () {
+        if (sidebar.classList.contains('is-open')) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar when a nav link is clicked (mobile)
+    const navItems = sidebar.querySelectorAll('.nav-item:not(.nav-item-logout)');
+    navItems.forEach(item => {
+        item.addEventListener('click', function () {
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
+        });
+    });
+
+    // Close sidebar on window resize past breakpoint
+    window.addEventListener('resize', function () {
+        if (window.innerWidth > 768) {
+            closeSidebar();
+        }
+    });
+
+    // Close sidebar on Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
+            closeSidebar();
+        }
+    });
+});
+
 // Add confirmation for destructive actions
 function confirmAction(message = 'Are you sure?') {
     return confirm(message);
