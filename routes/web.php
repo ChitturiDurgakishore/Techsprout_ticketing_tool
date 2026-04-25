@@ -21,22 +21,44 @@ Route::get('/dashboard', function () {
     $user = auth()->user();
 
     if ($user->role === 'admin') {
-        $total = Ticket::count();
-        $open = Ticket::where('status', 'open')->count();
-        $closed = Ticket::where('status', 'closed')->count();
-        $my = Ticket::where('assigned_to', $user->id)->count();
+        $total    = Ticket::count();
+        $open     = Ticket::where('status', 'open')->count();
+        $closed   = Ticket::where('status', 'closed')->count();
+        $assignedToMe  = Ticket::where('assigned_to', $user->id)->count();
+        $createdByMe   = Ticket::where('created_by', $user->id)->count();
     } else {
-        $total = Ticket::where('assigned_to', $user->id)->orWhere('created_by', $user->id)->count();
-        $open = Ticket::where(function($q) use ($user) {
-            $q->where('assigned_to', $user->id)->orWhere('created_by', $user->id);
-        })->where('status', 'open')->count();
+        // Tickets assigned to this user
+        $assignedToMe = Ticket::where('assigned_to', $user->id)->count();
+        // Tickets created by this user
+        $createdByMe  = Ticket::where('created_by', $user->id)->count();
+        // Total = union of assigned + created (avoid double-count)
+        $total  = Ticket::where('assigned_to', $user->id)
+                        ->orWhere('created_by', $user->id)
+                        ->count();
+        $open   = Ticket::where(function($q) use ($user) {
+                        $q->where('assigned_to', $user->id)->orWhere('created_by', $user->id);
+                    })->where('status', 'open')->count();
         $closed = Ticket::where(function($q) use ($user) {
-            $q->where('assigned_to', $user->id)->orWhere('created_by', $user->id);
-        })->where('status', 'closed')->count();
-        $my = $total;
+                        $q->where('assigned_to', $user->id)->orWhere('created_by', $user->id);
+                    })->where('status', 'closed')->count();
     }
 
-    $recentTickets = Ticket::with(['project', 'assignedTo'])
+    // Recent tickets assigned TO this user
+    $ticketsAssignedToMe = Ticket::with(['project', 'createdBy'])
+        ->where('assigned_to', $user->id)
+        ->latest()
+        ->take(5)
+        ->get();
+
+    // Recent tickets created BY this user (assigned to others or unassigned)
+    $ticketsCreatedByMe = Ticket::with(['project', 'assignedTo'])
+        ->where('created_by', $user->id)
+        ->latest()
+        ->take(5)
+        ->get();
+
+    // For admin: show all recent tickets
+    $recentTickets = Ticket::with(['project', 'assignedTo', 'createdBy'])
         ->when($user->role !== 'admin', function($q) use ($user) {
             $q->where(function($inner) use ($user) {
                 $inner->where('assigned_to', $user->id)->orWhere('created_by', $user->id);
@@ -46,7 +68,12 @@ Route::get('/dashboard', function () {
         ->take(5)
         ->get();
 
-    return view('dashboard', compact('total', 'open', 'closed', 'my', 'recentTickets'));
+    return view('dashboard', compact(
+        'total', 'open', 'closed',
+        'assignedToMe', 'createdByMe',
+        'ticketsAssignedToMe', 'ticketsCreatedByMe',
+        'recentTickets'
+    ));
 })->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {

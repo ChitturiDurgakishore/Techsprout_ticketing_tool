@@ -69,7 +69,7 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $query = Ticket::with(['project', 'assignedTo', 'department'])->newQuery();
+        $query = Ticket::with(['project', 'assignedTo', 'department', 'createdBy'])->newQuery();
 
         // Base access control
         if ($user->role !== 'admin') {
@@ -89,8 +89,13 @@ class TicketController extends Controller
         if ($request->filled('priority')) {
             $query->where('priority', $request->priority);
         }
+        // Only tickets assigned to me
         if ($request->filled('my_tickets')) {
             $query->where('assigned_to', $user->id);
+        }
+        // Only tickets created by me
+        if ($request->filled('created_by_me')) {
+            $query->where('created_by', $user->id);
         }
 
         $tickets = $query->latest()->paginate(15);
