@@ -167,6 +167,30 @@ a {
     color: var(--danger);
 }
 
+/* Navbar logout button — mobile only */
+.navbar-logout-form {
+    display: none; /* hidden on desktop */
+    margin: 0;
+}
+
+.navbar-logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    line-height: 1;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-logout-btn:hover {
+    background: var(--danger-light);
+}
+
 .user-info {
     display: flex;
     flex-direction: column;
@@ -639,33 +663,16 @@ textarea { min-height: 120px; resize: vertical; }
     border-color: var(--accent);
 }
 
-@media (max-width: 768px) {
-    .main-content {
-        padding: 16px;
-    }
-    .grid-4 {
-        grid-template-columns: repeat(2, 1fr);
-    }
 
-    .filters-section {
-        flex-direction: column;
-    }
 
-    .search-box {
-        width: 100%;
-    }
-
-    .filter-select {
-        width: 100%;
-    }
-
-    .navbar-user {
-        flex-wrap: wrap;
-    }
-}
 
 @media (max-width: 768px) {
     .hamburger {
+        display: flex;
+    }
+
+    /* Show logout button in navbar on mobile */
+    .navbar-logout-form {
         display: flex;
     }
 
@@ -680,6 +687,14 @@ textarea { min-height: 120px; resize: vertical; }
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         box-shadow: var(--shadow-md);
         padding-top: 80px;
+        overflow-y: auto;
+    }
+
+    /* Sidebar footer always sticks to bottom in mobile drawer */
+    .sidebar-footer {
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
     }
 
     .sidebar.is-open {
@@ -700,6 +715,18 @@ textarea { min-height: 120px; resize: vertical; }
 
     .navbar-user .user-info {
         display: none;
+    }
+
+    .filters-section {
+        flex-direction: column;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .filter-select {
+        width: 100%;
     }
 }
 
@@ -733,3 +760,4 @@ textarea { min-height: 120px; resize: vertical; }
         justify-content: center;
     }
 }
+

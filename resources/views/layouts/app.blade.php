@@ -36,6 +36,13 @@
                 <div class="user-avatar">
                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </div>
+                {{-- Mobile-only logout button — always visible in navbar on small screens --}}
+                <form method="POST" action="{{ route('logout') }}" class="navbar-logout-form">
+                    @csrf
+                    <button type="submit" class="navbar-logout-btn" title="Logout">
+                        🚪
+                    </button>
+                </form>
             </div>
         </nav>
 
