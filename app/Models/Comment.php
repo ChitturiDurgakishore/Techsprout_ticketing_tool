@@ -10,7 +10,7 @@ class Comment extends Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
-    public $fillables = [
+    public $fillable = [
         'ticket_id',
         'user_id',
         'message'
