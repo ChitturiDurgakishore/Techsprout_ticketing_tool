@@ -68,39 +68,47 @@ class TicketController extends Controller
 
     public function index(Request $request)
     {
-        $user = auth()->user();
-        $query = Ticket::with(['project', 'assignedTo', 'department', 'createdBy'])->newQuery();
+        $user    = auth()->user();
+        $tab     = $request->get('tab', 'assigned'); // 'assigned' or 'created'
+        $status   = $request->status;
+        $priority = $request->priority;
+        $search   = $request->search;
 
-        // Base access control
-        if ($user->role !== 'admin') {
-            $query->where(function ($q) use ($user) {
-                $q->where('assigned_to', $user->id)
-                    ->orWhere('created_by', $user->id);
-            });
+        if ($user->role === 'admin') {
+            // Admin: single unified list with all filters
+            $query = Ticket::with(['project', 'assignedTo', 'department', 'createdBy'])->newQuery();
+
+            if ($search)   $query->where('title', 'like', '%' . $search . '%');
+            if ($status)   $query->where('status', $status);
+            if ($priority) $query->where('priority', $priority);
+            if ($request->filled('my_tickets'))    $query->where('assigned_to', $user->id);
+            if ($request->filled('created_by_me')) $query->where('created_by', $user->id);
+
+            $tickets        = $query->latest()->paginate(15)->withQueryString();
+            $assignedTickets = null;
+            $createdTickets  = null;
+        } else {
+            // Non-admin: two separate sections
+            $tickets = null;
+
+            // Tab 1: Tickets assigned TO this user
+            $assignedQuery = Ticket::with(['project', 'department', 'createdBy'])
+                ->where('assigned_to', $user->id);
+            if ($search)   $assignedQuery->where('title', 'like', '%' . $search . '%');
+            if ($status)   $assignedQuery->where('status', $status);
+            if ($priority) $assignedQuery->where('priority', $priority);
+            $assignedTickets = $assignedQuery->latest()->paginate(15, ['*'], 'assigned_page')->withQueryString();
+
+            // Tab 2: Tickets created BY this user (assigned to others)
+            $createdQuery = Ticket::with(['project', 'department', 'assignedTo'])
+                ->where('created_by', $user->id);
+            if ($search)   $createdQuery->where('title', 'like', '%' . $search . '%');
+            if ($status)   $createdQuery->where('status', $status);
+            if ($priority) $createdQuery->where('priority', $priority);
+            $createdTickets = $createdQuery->latest()->paginate(15, ['*'], 'created_page')->withQueryString();
         }
 
-        // Filters
-        if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
-        }
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('priority')) {
-            $query->where('priority', $request->priority);
-        }
-        // Only tickets assigned to me
-        if ($request->filled('my_tickets')) {
-            $query->where('assigned_to', $user->id);
-        }
-        // Only tickets created by me
-        if ($request->filled('created_by_me')) {
-            $query->where('created_by', $user->id);
-        }
-
-        $tickets = $query->latest()->paginate(15);
-
-        return view('tickets.index', compact('tickets'));
+        return view('tickets.index', compact('tickets', 'assignedTickets', 'createdTickets', 'tab'));
     }
 
     public function show(Ticket $ticket)
