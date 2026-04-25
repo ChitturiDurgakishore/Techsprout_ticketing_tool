@@ -96,7 +96,7 @@
 
             <div class="auth-footer">
                 Already have an account?
-                <a href="/login">Sign In</a>
+                <a href="/">Sign In</a>
             </div>
         </div>
     </div>
