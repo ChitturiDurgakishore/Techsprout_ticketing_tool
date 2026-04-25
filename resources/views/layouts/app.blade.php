@@ -84,9 +84,17 @@
                     @if (auth()->user()->role === 'admin')
                         <div class="sidebar-section">
                             <div class="sidebar-title">Management</div>
+                            <a href="{{ route('users.index') }}" @class(['nav-item', 'nav-item-active' => request()->routeIs('users.*')])>
+                                <span class="nav-icon">👥</span>
+                                <span>Users</span>
+                            </a>
                             <a href="{{ route('departments.index') }}" @class(['nav-item', 'nav-item-active' => request()->routeIs('departments.*')])>
                                 <span class="nav-icon">🏢</span>
                                 <span>Departments</span>
+                            </a>
+                            <a href="{{ route('projects.create') }}" @class(['nav-item', 'nav-item-active' => request()->routeIs('projects.create')])>
+                                <span class="nav-icon">🆕</span>
+                                <span>New Project</span>
                             </a>
                         </div>
                     @endif
