@@ -135,13 +135,13 @@
     <div class="toggle-header">
         <div class="toggle-group">
             <a href="{{ route('projects.show', array_merge([$project->id], request()->except('section', 'assigned_page', 'created_page'), ['section' => 'assigned'])) }}"
-               class="toggle-btn {{ $section === 'assigned' ? 'toggle-btn-active' : '' }}">
+               class="toggle-btn stat-card-animate {{ $section === 'assigned' ? 'toggle-btn-active' : '' }}">
                 <span>👤</span>
                 <span>Assigned to Me</span>
                 <span class="toggle-pill">{{ $assignedTickets->total() }}</span>
             </a>
             <a href="{{ route('projects.show', array_merge([$project->id], request()->except('section', 'assigned_page', 'created_page'), ['section' => 'created'])) }}"
-               class="toggle-btn {{ $section === 'created' ? 'toggle-btn-active' : '' }}">
+               class="toggle-btn stat-card-animate {{ $section === 'created' ? 'toggle-btn-active' : '' }}">
                 <span>✏️</span>
                 <span>Assigned by Me</span>
                 <span class="toggle-pill">{{ $createdTickets->total() }}</span>

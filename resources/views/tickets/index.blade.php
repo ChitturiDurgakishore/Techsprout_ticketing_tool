@@ -78,12 +78,12 @@
     {{-- Tab Navigation --}}
     <div class="ticket-tabs">
         <a href="{{ route('tickets.index', array_merge(request()->except('tab', 'assigned_page', 'created_page'), ['tab' => 'assigned'])) }}"
-           class="ticket-tab {{ $tab === 'assigned' ? 'ticket-tab-active' : '' }}">
+           class="ticket-tab stat-card-animate {{ $tab === 'assigned' ? 'ticket-tab-active' : '' }}">
             👤 Assigned to Me
             <span class="tab-count">{{ $assignedTickets->total() }}</span>
         </a>
         <a href="{{ route('tickets.index', array_merge(request()->except('tab', 'assigned_page', 'created_page'), ['tab' => 'created'])) }}"
-           class="ticket-tab {{ $tab === 'created' ? 'ticket-tab-active' : '' }}">
+           class="ticket-tab stat-card-animate {{ $tab === 'created' ? 'ticket-tab-active' : '' }}">
             ✏️ Assigned by Me
             <span class="tab-count">{{ $createdTickets->total() }}</span>
         </a>

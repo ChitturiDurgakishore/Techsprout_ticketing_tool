@@ -704,23 +704,35 @@ tbody tr:hover { background: var(--bg-app); }
 .badge-type-task { background: var(--info-light); color: #1e40af; }
 
 /* Table Row Coloring */
-.row-priority-critical { background-color: rgba(239, 68, 68, 0.05) !important; }
-.row-priority-critical:hover { background-color: rgba(239, 68, 68, 0.1) !important; }
+.row-priority-critical { 
+    background-color: rgba(239, 68, 68, 0.08) !important; 
+    border-left: 4px solid var(--danger) !important;
+}
+.row-priority-critical:hover { background-color: rgba(239, 68, 68, 0.12) !important; }
 
-.row-priority-high { background-color: rgba(245, 158, 11, 0.05) !important; }
-.row-priority-high:hover { background-color: rgba(245, 158, 11, 0.1) !important; }
+.row-priority-high { 
+    background-color: rgba(245, 158, 11, 0.08) !important; 
+    border-left: 4px solid var(--warning) !important;
+}
+.row-priority-high:hover { background-color: rgba(245, 158, 11, 0.12) !important; }
 
-.row-priority-medium { background-color: rgba(254, 240, 138, 0.2) !important; }
-.row-priority-medium:hover { background-color: rgba(254, 240, 138, 0.3) !important; }
+.row-priority-medium { 
+    background-color: rgba(254, 240, 138, 0.25) !important; 
+    border-left: 4px solid #fbbf24 !important;
+}
+.row-priority-medium:hover { background-color: rgba(254, 240, 138, 0.35) !important; }
 
-.row-status-closed { background-color: rgba(16, 185, 129, 0.05) !important; }
-.row-status-closed:hover { background-color: rgba(16, 185, 129, 0.1) !important; }
+.row-status-closed { 
+    background-color: rgba(16, 185, 129, 0.08) !important; 
+    border-left: 4px solid var(--success) !important;
+}
+.row-status-closed:hover { background-color: rgba(16, 185, 129, 0.12) !important; }
 
 /* Stat Card Animations */
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(15px);
     }
     to {
         opacity: 1;
@@ -735,14 +747,15 @@ tbody tr:hover { background: var(--bg-app); }
 }
 
 .stat-card-animate {
-    animation: fadeInUp 0.5s ease forwards;
+    animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
 }
 
-.stat-card-animate:nth-child(1) { animation-delay: 0.1s; }
-.stat-card-animate:nth-child(2) { animation-delay: 0.2s; }
-.stat-card-animate:nth-child(3) { animation-delay: 0.3s; }
-.stat-card-animate:nth-child(4) { animation-delay: 0.4s; }
+.stat-card-animate:nth-child(1) { animation-delay: 0.05s; }
+.stat-card-animate:nth-child(2) { animation-delay: 0.1s; }
+.stat-card-animate:nth-child(3) { animation-delay: 0.15s; }
+.stat-card-animate:nth-child(4) { animation-delay: 0.2s; }
+.stat-card-animate:nth-child(5) { animation-delay: 0.25s; }
 
 .stat-card:hover .stat-number {
     transform: scale(1.1);
@@ -770,6 +783,21 @@ tbody tr:hover { background: var(--bg-app); }
     height: 200%;
     background: radial-gradient(circle, rgba(37, 99, 235, 0.03) 0%, transparent 70%);
     pointer-events: none;
+}
+
+/* Toggle Group Adjustments */
+.toggle-group {
+    padding: 6px;
+    gap: 4px;
+}
+
+.toggle-btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.toggle-btn:active {
+    transform: scale(0.95);
 }
 
 /* Forms */
@@ -1056,6 +1084,22 @@ textarea { min-height: 120px; resize: vertical; }
 
     .filter-select {
         width: 100%;
+    }
+
+    .toggle-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .toggle-group {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .toggle-btn {
+        flex: 1;
+        justify-content: center;
     }
 }
 
