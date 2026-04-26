@@ -44,19 +44,19 @@
 
 {{-- Stats Row --}}
 <div class="grid grid-4" style="margin-bottom: 24px;">
-    <div class="stat-card">
+    <div class="stat-card stat-card-animate">
         <div class="stat-label">Total Tickets</div>
         <div class="stat-number">{{ $stats['total'] }}</div>
     </div>
-    <div class="stat-card stat-open">
+    <div class="stat-card stat-open stat-card-animate">
         <div class="stat-label">Open</div>
         <div class="stat-number" style="color: var(--warning);">{{ $stats['open'] }}</div>
     </div>
-    <div class="stat-card stat-in-progress">
+    <div class="stat-card stat-in-progress stat-card-animate">
         <div class="stat-label">In Progress</div>
         <div class="stat-number" style="color: var(--accent);">{{ $stats['in_progress'] }}</div>
     </div>
-    <div class="stat-card stat-closed">
+    <div class="stat-card stat-closed stat-card-animate">
         <div class="stat-label">Closed</div>
         <div class="stat-number" style="color: var(--success);">{{ $stats['closed'] }}</div>
     </div>
@@ -168,7 +168,19 @@
                     </thead>
                     <tbody>
                         @foreach($assignedTickets as $ticket)
-                            <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" style="cursor: pointer;">
+                            @php
+                                $rowClass = '';
+                                if ($ticket->status === 'closed') {
+                                    $rowClass = 'row-status-closed';
+                                } elseif ($ticket->priority === 'critical') {
+                                    $rowClass = 'row-priority-critical';
+                                } elseif ($ticket->priority === 'high') {
+                                    $rowClass = 'row-priority-high';
+                                } elseif ($ticket->priority === 'medium') {
+                                    $rowClass = 'row-priority-medium';
+                                }
+                            @endphp
+                            <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" class="{{ $rowClass }}" style="cursor: pointer;">
                                 <td style="font-weight: 700; color: var(--text-light); padding-left: 24px;">#{{ $ticket->id }}</td>
                                 <td>
                                     <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;">{{ Str::limit($ticket->title, 55) }}</div>
@@ -225,7 +237,19 @@
                     </thead>
                     <tbody>
                         @foreach($createdTickets as $ticket)
-                            <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" style="cursor: pointer;">
+                            @php
+                                $rowClass = '';
+                                if ($ticket->status === 'closed') {
+                                    $rowClass = 'row-status-closed';
+                                } elseif ($ticket->priority === 'critical') {
+                                    $rowClass = 'row-priority-critical';
+                                } elseif ($ticket->priority === 'high') {
+                                    $rowClass = 'row-priority-high';
+                                } elseif ($ticket->priority === 'medium') {
+                                    $rowClass = 'row-priority-medium';
+                                }
+                            @endphp
+                            <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" class="{{ $rowClass }}" style="cursor: pointer;">
                                 <td style="font-weight: 700; color: var(--text-light); padding-left: 24px;">#{{ $ticket->id }}</td>
                                 <td>
                                     <div style="font-weight: 600; color: var(--text-main); margin-bottom: 4px;">{{ Str::limit($ticket->title, 55) }}</div>

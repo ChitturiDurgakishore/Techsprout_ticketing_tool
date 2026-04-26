@@ -40,23 +40,23 @@
 
 {{-- Stats row --}}
 <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 24px;">
-    <div class="stat-card">
+    <div class="stat-card stat-card-animate">
         <div class="stat-label">Assigned</div>
         <div class="stat-number" style="font-size: 1.5rem;">{{ $stats['assigned'] }}</div>
     </div>
-    <div class="stat-card stat-open">
+    <div class="stat-card stat-open stat-card-animate">
         <div class="stat-label">Open</div>
         <div class="stat-number" style="font-size: 1.5rem; color: var(--warning);">{{ $stats['open'] }}</div>
     </div>
-    <div class="stat-card stat-in-progress">
+    <div class="stat-card stat-in-progress stat-card-animate">
         <div class="stat-label">In Progress</div>
         <div class="stat-number" style="font-size: 1.5rem; color: var(--accent);">{{ $stats['in_progress'] }}</div>
     </div>
-    <div class="stat-card stat-closed">
+    <div class="stat-card stat-closed stat-card-animate">
         <div class="stat-label">Closed</div>
         <div class="stat-number" style="font-size: 1.5rem; color: var(--success);">{{ $stats['closed'] }}</div>
     </div>
-    <div class="stat-card" style="border-left: 4px solid var(--info);">
+    <div class="stat-card stat-card-animate" style="border-left: 4px solid var(--info);">
         <div class="stat-label">Created</div>
         <div class="stat-number" style="font-size: 1.5rem; color: var(--info);">{{ $stats['created'] }}</div>
     </div>
@@ -87,7 +87,19 @@
                 </thead>
                 <tbody>
                     @foreach($assignedTickets as $ticket)
-                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" style="cursor: pointer;">
+                        @php
+                            $rowClass = '';
+                            if ($ticket->status === 'closed') {
+                                $rowClass = 'row-status-closed';
+                            } elseif ($ticket->priority === 'critical') {
+                                $rowClass = 'row-priority-critical';
+                            } elseif ($ticket->priority === 'high') {
+                                $rowClass = 'row-priority-high';
+                            } elseif ($ticket->priority === 'medium') {
+                                $rowClass = 'row-priority-medium';
+                            }
+                        @endphp
+                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" class="{{ $rowClass }}" style="cursor: pointer;">
                             <td style="font-weight: 700; color: var(--text-light); padding-left: 24px;">#{{ $ticket->id }}</td>
                             <td>
                                 <div style="font-weight: 600; color: var(--text-main);">{{ Str::limit($ticket->title, 45) }}</div>
@@ -143,7 +155,19 @@
                 </thead>
                 <tbody>
                     @foreach($createdTickets as $ticket)
-                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" style="cursor: pointer;">
+                        @php
+                            $rowClass = '';
+                            if ($ticket->status === 'closed') {
+                                $rowClass = 'row-status-closed';
+                            } elseif ($ticket->priority === 'critical') {
+                                $rowClass = 'row-priority-critical';
+                            } elseif ($ticket->priority === 'high') {
+                                $rowClass = 'row-priority-high';
+                            } elseif ($ticket->priority === 'medium') {
+                                $rowClass = 'row-priority-medium';
+                            }
+                        @endphp
+                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" class="{{ $rowClass }}" style="cursor: pointer;">
                             <td style="font-weight: 700; color: var(--text-light); padding-left: 24px;">#{{ $ticket->id }}</td>
                             <td>
                                 <div style="font-weight: 600; color: var(--text-main);">{{ Str::limit($ticket->title, 45) }}</div>

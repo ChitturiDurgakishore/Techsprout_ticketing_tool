@@ -34,7 +34,7 @@
 
 {{-- Row 1: Core ticket stats --}}
 <div class="grid grid-4" style="margin-bottom: 16px;">
-    <div class="stat-card">
+    <div class="stat-card stat-card-animate">
         <div class="flex items-center justify-between">
             <div class="stat-label">Total Tickets</div>
             <span style="font-size: 1.5rem;">🎫</span>
@@ -43,7 +43,7 @@
         <div class="text-xs text-muted" style="margin-top: 4px;">System-wide</div>
     </div>
 
-    <div class="stat-card stat-open">
+    <div class="stat-card stat-open stat-card-animate">
         <div class="flex items-center justify-between">
             <div class="stat-label">Open</div>
             <span style="font-size: 1.5rem;">🟡</span>
@@ -52,7 +52,7 @@
         <div class="text-xs text-muted" style="margin-top: 4px;">Awaiting action</div>
     </div>
 
-    <div class="stat-card stat-in-progress">
+    <div class="stat-card stat-in-progress stat-card-animate">
         <div class="flex items-center justify-between">
             <div class="stat-label">In Progress</div>
             <span style="font-size: 1.5rem;">⚙️</span>
@@ -61,7 +61,7 @@
         <div class="text-xs text-muted" style="margin-top: 4px;">Being worked on</div>
     </div>
 
-    <div class="stat-card stat-closed">
+    <div class="stat-card stat-closed stat-card-animate">
         <div class="flex items-center justify-between">
             <div class="stat-label">Closed</div>
             <span style="font-size: 1.5rem;">✅</span>
@@ -73,7 +73,7 @@
 
 {{-- Row 2: System + alert stats --}}
 <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 32px;">
-    <div class="stat-card" style="border-left: 4px solid var(--danger);">
+    <div class="stat-card stat-card-animate stat-card-critical">
         <div class="flex items-center justify-between">
             <div class="stat-label">🔴 Critical</div>
             <span style="font-size: 1.5rem;">🚨</span>
@@ -82,7 +82,7 @@
         <div class="text-xs text-muted" style="margin-top: 4px;">Critical & open/in-progress</div>
     </div>
 
-    <div class="stat-card" style="border-left: 4px solid #8b5cf6;">
+    <div class="stat-card stat-card-animate" style="border-left: 4px solid #8b5cf6;">
         <div class="flex items-center justify-between">
             <div class="stat-label">Total Users</div>
             <span style="font-size: 1.5rem;">👥</span>
@@ -93,7 +93,7 @@
         </div>
     </div>
 
-    <div class="stat-card" style="border-left: 4px solid var(--success);">
+    <div class="stat-card stat-card-animate" style="border-left: 4px solid var(--success);">
         <div class="flex items-center justify-between">
             <div class="stat-label">Active Projects</div>
             <span style="font-size: 1.5rem;">🏗️</span>
@@ -104,7 +104,7 @@
         </div>
     </div>
 
-    <div class="stat-card" style="border-left: 4px solid var(--accent);">
+    <div class="stat-card stat-card-animate stat-card-premium" style="border-left: 4px solid var(--accent);">
         <div class="flex items-center justify-between">
             <div class="stat-label">Assigned to Me</div>
             <span style="font-size: 1.5rem;">👤</span>
@@ -139,7 +139,19 @@
                 </thead>
                 <tbody>
                     @foreach($recentTickets as $ticket)
-                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" style="cursor: pointer;">
+                        @php
+                            $rowClass = '';
+                            if ($ticket->status === 'closed') {
+                                $rowClass = 'row-status-closed';
+                            } elseif ($ticket->priority === 'critical') {
+                                $rowClass = 'row-priority-critical';
+                            } elseif ($ticket->priority === 'high') {
+                                $rowClass = 'row-priority-high';
+                            } elseif ($ticket->priority === 'medium') {
+                                $rowClass = 'row-priority-medium';
+                            }
+                        @endphp
+                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" class="{{ $rowClass }}" style="cursor: pointer;">
                             <td style="font-weight: 700; color: var(--text-light); padding-left: 24px;">#{{ $ticket->id }}</td>
                             <td>
                                 <div style="font-weight: 600; color: var(--text-main);">{{ Str::limit($ticket->title, 40) }}</div>
@@ -237,7 +249,7 @@
 
 {{-- Stats Cards --}}
 <div class="grid grid-4">
-    <div class="stat-card">
+    <div class="stat-card stat-card-animate">
         <div class="flex items-center justify-between">
             <div class="stat-label">Total Tickets</div>
             <span style="font-size: 1.25rem;">📊</span>
@@ -246,7 +258,7 @@
         <div class="text-xs text-muted" style="margin-top: 4px;">All your tickets</div>
     </div>
 
-    <div class="stat-card stat-open">
+    <div class="stat-card stat-open stat-card-animate">
         <div class="flex items-center justify-between">
             <div class="stat-label">Open</div>
             <span style="font-size: 1.25rem;">🟡</span>
@@ -255,7 +267,7 @@
         <div class="text-xs text-muted" style="margin-top: 4px;">Needs attention</div>
     </div>
 
-    <div class="stat-card stat-closed">
+    <div class="stat-card stat-closed stat-card-animate">
         <div class="flex items-center justify-between">
             <div class="stat-label">Closed</div>
             <span style="font-size: 1.25rem;">✅</span>
@@ -264,7 +276,7 @@
         <div class="text-xs text-muted" style="margin-top: 4px;">Resolved</div>
     </div>
 
-    <div class="stat-card stat-in-progress">
+    <div class="stat-card stat-card-animate stat-card-premium" style="border-left: 4px solid var(--accent);">
         <div class="flex items-center justify-between">
             <div class="stat-label">Assigned to Me</div>
             <span style="font-size: 1.25rem;">👤</span>
@@ -275,9 +287,9 @@
 </div>
 
 <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 32px; margin-top: -12px;">
-    <div class="stat-card" style="border-left: 4px solid var(--info);">
+    <div class="stat-card stat-card-animate stat-card-premium" style="border-left: 4px solid var(--info);">
         <div class="flex items-center justify-between">
-            <div class="stat-label">Created by Me</div>
+            <div class="stat-label">Assigned by Me</div>
             <span style="font-size: 1.25rem;">✏️</span>
         </div>
         <div class="stat-number" style="color: var(--info);">{{ $createdByMe }}</div>
@@ -310,7 +322,19 @@
                 </thead>
                 <tbody>
                     @foreach($ticketsAssignedToMe as $ticket)
-                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" style="cursor: pointer;">
+                        @php
+                            $rowClass = '';
+                            if ($ticket->status === 'closed') {
+                                $rowClass = 'row-status-closed';
+                            } elseif ($ticket->priority === 'critical') {
+                                $rowClass = 'row-priority-critical';
+                            } elseif ($ticket->priority === 'high') {
+                                $rowClass = 'row-priority-high';
+                            } elseif ($ticket->priority === 'medium') {
+                                $rowClass = 'row-priority-medium';
+                            }
+                        @endphp
+                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" class="{{ $rowClass }}" style="cursor: pointer;">
                             <td style="font-weight: 700; color: var(--text-light); padding-left: 24px;">#{{ $ticket->id }}</td>
                             <td>
                                 <div style="font-weight: 600; color: var(--text-main);">{{ Str::limit($ticket->title, 45) }}</div>
@@ -371,7 +395,19 @@
                 </thead>
                 <tbody>
                     @foreach($ticketsCreatedByMe as $ticket)
-                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" style="cursor: pointer;">
+                        @php
+                            $rowClass = '';
+                            if ($ticket->status === 'closed') {
+                                $rowClass = 'row-status-closed';
+                            } elseif ($ticket->priority === 'critical') {
+                                $rowClass = 'row-priority-critical';
+                            } elseif ($ticket->priority === 'high') {
+                                $rowClass = 'row-priority-high';
+                            } elseif ($ticket->priority === 'medium') {
+                                $rowClass = 'row-priority-medium';
+                            }
+                        @endphp
+                        <tr onclick="window.location.href='{{ route('tickets.show', $ticket) }}'" class="{{ $rowClass }}" style="cursor: pointer;">
                             <td style="font-weight: 700; color: var(--text-light); padding-left: 24px;">#{{ $ticket->id }}</td>
                             <td>
                                 <div style="font-weight: 600; color: var(--text-main);">{{ Str::limit($ticket->title, 45) }}</div>

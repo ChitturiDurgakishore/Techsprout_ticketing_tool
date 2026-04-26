@@ -703,6 +703,75 @@ tbody tr:hover { background: var(--bg-app); }
 .badge-type-feature { background: var(--success-light); color: #065f46; }
 .badge-type-task { background: var(--info-light); color: #1e40af; }
 
+/* Table Row Coloring */
+.row-priority-critical { background-color: rgba(239, 68, 68, 0.05) !important; }
+.row-priority-critical:hover { background-color: rgba(239, 68, 68, 0.1) !important; }
+
+.row-priority-high { background-color: rgba(245, 158, 11, 0.05) !important; }
+.row-priority-high:hover { background-color: rgba(245, 158, 11, 0.1) !important; }
+
+.row-priority-medium { background-color: rgba(254, 240, 138, 0.2) !important; }
+.row-priority-medium:hover { background-color: rgba(254, 240, 138, 0.3) !important; }
+
+.row-status-closed { background-color: rgba(16, 185, 129, 0.05) !important; }
+.row-status-closed:hover { background-color: rgba(16, 185, 129, 0.1) !important; }
+
+/* Stat Card Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse-subtle {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.stat-card-animate {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.stat-card-animate:nth-child(1) { animation-delay: 0.1s; }
+.stat-card-animate:nth-child(2) { animation-delay: 0.2s; }
+.stat-card-animate:nth-child(3) { animation-delay: 0.3s; }
+.stat-card-animate:nth-child(4) { animation-delay: 0.4s; }
+
+.stat-card:hover .stat-number {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.stat-card-critical {
+    border-left: 4px solid var(--danger) !important;
+    animation: pulse-subtle 2s infinite ease-in-out;
+}
+
+.stat-card-premium {
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-app) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-premium::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+}
+
 /* Forms */
 .form-group {
     margin-bottom: 20px;
